@@ -6,7 +6,10 @@ import * as AWS from 'aws-sdk';
 export class AppService {
   private readonly ec2: AWS.EC2;
 
-  constructor() { this.ec2 = new AWS.EC2();  }
+  constructor() {
+    this.ec2 = new AWS.EC2();
+    this.ec2.config.update({region:'ap-south-2'})
+  }
   getTimeString() {
     const date = new Date();
     const hours = date.getHours();
