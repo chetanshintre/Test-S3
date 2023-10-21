@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import * as fs from 'fs';
-import { EC2 } from 'aws-sdk';
+import * as AWS from 'aws-sdk';
 
 @Injectable()
 export class AppService {
-  private readonly ec2: EC2;
+  private readonly ec2: AWS.EC2;
 
-  constructor() { this.ec2 = new EC2(); }
+  constructor() { this.ec2 = new AWS.EC2();  }
   getTimeString() {
     const date = new Date();
     const hours = date.getHours();
