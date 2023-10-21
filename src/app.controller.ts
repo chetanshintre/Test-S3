@@ -14,7 +14,9 @@ export class AppController {
   async dump(){
     const fileName = this.appService.getTimeString() + '.txt';
 
-    const filePath = await this.appService.createFile(fileName, '/mountfolder');
+    const data = this.appService.getInstanceId();
+
+    const filePath = await this.appService.createFile(fileName, '/mountfolder', data);
 
     return { filePath };
   }
