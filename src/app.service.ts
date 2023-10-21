@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import * as fs from 'fs';
-import { HttpService } from '@nestjs/axios';
+import { EC2 } from 'aws-sdk';
 
 @Injectable()
 export class AppService {
-  constructor(private readonly httpService: HttpService) { }
+  private readonly ec2: EC2;
+
+  constructor() { this.ec2 = new EC2(); }
   getTimeString() {
     const date = new Date();
     const hours = date.getHours();
@@ -26,9 +28,13 @@ export class AppService {
     await fs.promises.copyFile(sourcePath, destinationPath);
   }
 
-  async getInstanceId() {
-    const response = await this.httpService.get('http://169.254.169.254/latest/meta-data/instance-id');
-    const instanceId = response;
-    return instanceId;
+  async getInstanceId(): Promise<string> {
+    const response = await this.ec2.describeInstances().promise();
+    const instanceId = response.Reservations?.[0]?.Instances?.[0]?.InstanceId;
+    if (instanceId) {
+      return instanceId;
+    } else {
+      throw new Error('Failed to retrieve instance ID');
+    }
   }
 }
