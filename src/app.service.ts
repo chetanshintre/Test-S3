@@ -32,7 +32,6 @@ export class AppService {
   async getInstanceId(): Promise<string> {
     const url = 'http://169.254.169.254/latest/meta-data/instance-id'
     const { data } = await firstValueFrom(this.httpService.get(url));
-    console.log(data);
     return data;
   }
 }

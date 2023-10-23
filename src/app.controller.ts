@@ -12,9 +12,11 @@ export class AppController {
 
   @Post('/dump')
   async dump(){
-    const fileName = this.appService.getTimeString() + '.txt';
+    const instanceID = await this.appService.getInstanceId();
 
-    const data = await this.appService.getInstanceId();
+    const fileName = this.appService.getTimeString() + instanceID + '.txt';
+
+    const data = fileName + instanceID;
 
     const filePath = await this.appService.createFile(fileName, '/mountfolder', data);
 
