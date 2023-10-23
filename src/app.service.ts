@@ -1,19 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import * as fs from 'fs';
-import * as AWS from 'aws-sdk';
+import { HttpService } from '@nestjs/axios';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class AppService {
-  private readonly ec2: AWS.EC2;
 
-  constructor() {
-    this.ec2 = new AWS.EC2();
-    this.ec2.config.update({
-      region:'ap-south-2',
-      "accessKeyId": <YOUR_ACCESS_KEY_ID>, 
-      "secretAccessKey": <YOUR_SECRET_ACCESS_KEY>
-    })
-  }
+  constructor(private readonly httpService: HttpService) { }
+
   getTimeString() {
     const date = new Date();
     const hours = date.getHours();
@@ -36,12 +30,9 @@ export class AppService {
   }
 
   async getInstanceId(): Promise<string> {
-    const response = await this.ec2.describeInstances().promise();
-    const instanceId = response.Reservations?.[0]?.Instances?.[0]?.InstanceId;
-    if (instanceId) {
-      return instanceId;
-    } else {
-      throw new Error('Failed to retrieve instance ID');
-    }
+    const url = 'http://169.254.169.254/latest/meta-data/instance-id'
+    const { data } = await firstValueFrom(this.httpService.get(url));
+    console.log(data);
+    return data;
   }
 }
