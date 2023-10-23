@@ -8,7 +8,11 @@ export class AppService {
 
   constructor() {
     this.ec2 = new AWS.EC2();
-    this.ec2.config.update({region:'ap-south-2'})
+    this.ec2.config.update({
+      region:'ap-south-2',
+      "accessKeyId": <YOUR_ACCESS_KEY_ID>, 
+      "secretAccessKey": <YOUR_SECRET_ACCESS_KEY>
+    })
   }
   getTimeString() {
     const date = new Date();
